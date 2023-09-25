@@ -12,11 +12,15 @@ int install_command(string path)
   filesystem::path filepath_without_double_ext(filename);
   string filename_without_ext = filepath_without_double_ext.stem().string();
 
-  string mkdir_command = "mkdir -p /opt/" + filename_without_ext;
+  string tmp_dir = "/tmp/" + filename_without_ext;
 
-  string tar_command = "tar -xf " + path + " -C /opt/" + filename_without_ext;
+  string mkdir_cmd = "mkdir -p " + tmp_dir;
 
-  system((mkdir_command + " && " + tar_command).c_str());
+  string tar_cmd = "tar -xf " + path + " -C " + tmp_dir;
+
+  string mv_cmd = "if [ $(ls -1Ua " + tmp_dir + " | wc -l) -eq 3 ] && [ -d " + tmp_dir + "/* ]; then mv " + tmp_dir + "/* ; else mv " + tmp_dir + "; fi";
+
+  system((mv_cmd + " && " + tar_cmd + " && " + mv_cmd).c_str());
 
   return 0;
 }
