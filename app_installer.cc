@@ -20,9 +20,7 @@ int install_command(string path)
 
   string mv_cmd = "if [ $(ls -1Ua " + tmp_dir + " | wc -l) -eq 3 ] && [ -d " + tmp_dir + "/* ]; then mv " + tmp_dir + "/* ; else mv " + tmp_dir + "; fi";
 
-  system((mv_cmd + " && " + tar_cmd + " && " + mv_cmd).c_str());
-
-  return 0;
+  return system((mv_cmd + " && " + tar_cmd + " && " + mv_cmd).c_str());
 }
 
 int main(int argc, char *argv[])
@@ -56,7 +54,7 @@ int main(int argc, char *argv[])
                {
                   int status = system(command_as_root("app_installer install " + path).c_str());
                   string result = "{\"path\":\"" + path + "\",\"status\":" + to_string(status) + "}";
-                  w.resolve(seq, 0,  result); })
+                  w.resolve(seq, status,  result); })
             .detach();
       },
       nullptr);
