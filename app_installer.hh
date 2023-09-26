@@ -97,7 +97,10 @@ const std::string html = R"html(
 
         window.install()
           .then(result => {
-            // TODO: handle result
+            const status = result?.status === 0;
+            if (!status) {
+              draggableElement.style.display = 'block';
+            }
           })
           .catch(err => {
             draggableElement.style.display = 'block';

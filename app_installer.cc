@@ -9,18 +9,37 @@ int install_command(string path)
 {
   filesystem::path filepath(path);
   string filename = filepath.stem().string();
+  string fileextension = filepath.extension().string();
   filesystem::path filepath_without_double_ext(filename);
   string filename_without_ext = filepath_without_double_ext.stem().string();
 
   string tmp_dir = "/tmp/" + filename_without_ext;
-
   string mkdir_cmd = "mkdir -p " + tmp_dir;
 
   string tar_cmd = "tar -xf " + path + " -C " + tmp_dir;
+  string zip_cmd = "unzip " + path + " -d " + tmp_dir;
+  string deb_cmd = "apt install -y " + path;
+  string rpm_cmd = "rpm install -y " + path;
+
+  string install_cmd = tar_cmd;
+
+  if (fileextension == ".deb")
+  {
+    return system(deb_cmd.c_str());
+  }
+  else if (fileextension == ".rpm")
+  {
+    return system(rpm_cmd.c_str());
+  }
+
+  if (fileextension == ".zip")
+  {
+    install_cmd = zip_cmd;
+  }
 
   string mv_cmd = "if [ $(ls -1Ua " + tmp_dir + " | wc -l) -eq 3 ] && [ -d " + tmp_dir + "/* ]; then mv " + tmp_dir + "/* /opt; else mv " + tmp_dir + " /opt; fi";
 
-  return system((mkdir_cmd + " && " + tar_cmd + " && " + mv_cmd).c_str());
+  return system((mkdir_cmd + " && " + install_cmd + " && " + mv_cmd).c_str());
 }
 
 int main(int argc, char *argv[])
@@ -33,11 +52,18 @@ int main(int argc, char *argv[])
 
   if (argc == 3)
   {
-    string path = string(argv[2]);
+    if (string(argv[1]) == "install")
+    {
+      string path = string(argv[2]);
 
-    install_command(path);
+      return install_command(path);
+    }
+    return 2;
+  }
 
-    return 0;
+  if (argc > 3)
+  {
+    return 3;
   }
 
   string path = string(argv[1]);
