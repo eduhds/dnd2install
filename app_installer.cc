@@ -18,9 +18,9 @@ int install_command(string path)
 
   string tar_cmd = "tar -xf " + path + " -C " + tmp_dir;
 
-  string mv_cmd = "if [ $(ls -1Ua " + tmp_dir + " | wc -l) -eq 3 ] && [ -d " + tmp_dir + "/* ]; then mv " + tmp_dir + "/* ; else mv " + tmp_dir + "; fi";
+  string mv_cmd = "if [ $(ls -1Ua " + tmp_dir + " | wc -l) -eq 3 ] && [ -d " + tmp_dir + "/* ]; then mv " + tmp_dir + "/* /opt; else mv " + tmp_dir + " /opt; fi";
 
-  return system((mv_cmd + " && " + tar_cmd + " && " + mv_cmd).c_str());
+  return system((mkdir_cmd + " && " + tar_cmd + " && " + mv_cmd).c_str());
 }
 
 int main(int argc, char *argv[])
