@@ -12,7 +12,13 @@
     {
       "label": "test",
       "type": "shell",
-      "command": "./build/app_installer /home/eduardo/Downloads/node.tar.xz",
+      "command": "./build/app_installer /tmp/*.tar.xz",
+      "problemMatcher": []
+    },
+    {
+      "label": "install",
+      "type": "shell",
+      "command": "sh scripts/install.sh",
       "problemMatcher": []
     }
   ]
