@@ -14,7 +14,7 @@ int install_command(string path)
   string filename_without_ext = filepath_without_double_ext.stem().string();
 
   string tmp_dir = "/tmp/" + filename_without_ext;
-  string mkdir_cmd = "mkdir -p " + tmp_dir;
+  string mkdir_cmd = "rm -rf " + tmp_dir + " && mkdir -p " + tmp_dir;
 
   string tar_cmd = "tar -xf " + path + " -C " + tmp_dir;
   string zip_cmd = "unzip " + path + " -d " + tmp_dir;
