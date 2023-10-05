@@ -37,9 +37,17 @@ int install_command(string path)
     install_cmd = zip_cmd;
   }
 
-  string mv_cmd = "if [ $(ls -1Ua " + tmp_dir + " | wc -l) -eq 3 ] && [ -d " + tmp_dir + "/* ]; then mv " + tmp_dir + "/* /opt; else mv " + tmp_dir + " /opt; fi";
+  string cp_cmd = R"(
+    tmp_dir=)" + tmp_dir +
+                  R"(
+    if [ $(ls -1Ua "$tmp_dir" | wc -l) -eq 3 ] && [ -d "$tmp_dir/*" ]; then
+      cp -r "$tmp_dir/*" /opt
+    else
+      cp -r "$tmp_dir" /opt
+    fi
+  )";
 
-  return system((mkdir_cmd + " && " + install_cmd + " && " + mv_cmd).c_str());
+  return system((mkdir_cmd + " && " + install_cmd + " && " + cp_cmd).c_str());
 }
 
 int main(int argc, char *argv[])
