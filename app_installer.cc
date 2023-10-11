@@ -40,10 +40,10 @@ int install_command(string path)
   string cp_cmd = R"(
     tmp_dir=)" + tmp_dir +
                   R"(
-    if [ $(ls -1Ua "$tmp_dir" | wc -l) -eq 3 ] && [ -d "$tmp_dir/*" ]; then
-      cp -r "$tmp_dir/*" /opt
+    if [ $(ls -1Ua $tmp_dir | wc -l) -eq 3 ] && [ -d $tmp_dir/* ]; then
+      cp -r $tmp_dir/* /opt
     else
-      cp -r "$tmp_dir" /opt
+      cp -r $tmp_dir /opt
     fi
   )";
 
