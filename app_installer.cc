@@ -19,7 +19,7 @@ int install_command(string path)
   string tar_cmd = "tar -xf " + path + " -C " + tmp_dir;
   string zip_cmd = "unzip " + path + " -d " + tmp_dir;
   string deb_cmd = "apt install -y " + path;
-  string rpm_cmd = "rpm install -y " + path;
+  string rpm_cmd = "rpm --force -i " + path;
 
   string install_cmd = tar_cmd;
 
