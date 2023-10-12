@@ -172,5 +172,6 @@ elif command -v su >/dev/null 2>&1; then
 else
     x-terminal-emulator -e "echo 'Command must be run as root user: ${install_command}'"
 fi
+if [ $? -ne 0 ]; then exit 1; fi
 )";
 }

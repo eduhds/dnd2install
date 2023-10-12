@@ -87,7 +87,11 @@ int main(int argc, char *argv[])
         thread([&, seq, req]
                {
                   int status = system(command_as_root("app_installer install " + path).c_str());
+                     
+                  system(status == 0 ? "notify-send 'Successfully installed'" : "notify-send 'Failed to install'");
+     
                   string result = "{\"path\":\"" + path + "\",\"status\":" + to_string(status) + "}";
+
                   w.resolve(seq, status,  result); })
             .detach();
       },
