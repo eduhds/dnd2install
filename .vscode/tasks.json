@@ -20,6 +20,12 @@
       "type": "shell",
       "command": "sh scripts/install.sh",
       "problemMatcher": []
+    },
+    {
+      "label": "build_iso",
+      "type": "shell",
+      "command": "sh scripts/build_iso.sh",
+      "problemMatcher": []
     }
   ]
 }
