@@ -1,6 +1,7 @@
 #!/bin/sh
 
-mkdir -p build
+rm -rf build
+mkdir build
 
 g++ *.cc -static-libgcc -static-libstdc++ -std=c++17 \
     -Ilibs/webview $(pkg-config --cflags --libs gtk+-3.0 webkit2gtk-4.0) \
