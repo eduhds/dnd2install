@@ -1,7 +1,7 @@
 #include <iostream>
 #include <filesystem>
 #include "webview.h"
-#include "app_installer.hh"
+#include "dnd_installer.hh"
 
 using namespace std;
 
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
       {
         thread([&, seq, req]
                {
-                  int status = system(command_as_root("app_installer install " + path).c_str());
+                  int status = system(command_as_root("dnd_installer install " + path).c_str());
                      
                   system(status == 0 ? "notify-send 'Successfully installed'" : "notify-send 'Failed to install'");
      

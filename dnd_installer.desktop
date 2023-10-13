@@ -2,9 +2,9 @@
 Encoding=UTF-8
 Version=1.0
 Type=Application
-Exec=/usr/local/bin/app_installer %f
+Exec=/usr/local/bin/dnd_installer %f
 Name=Drag and drop to install
-Icon=/usr/local/share/icons/app_installer.png
+Icon=/usr/local/share/icons/dnd_installer.png
 Comment=A drag and drop installer
 NoDisplay=true
 Categories=Utility;FileTools
