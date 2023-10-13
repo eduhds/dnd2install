@@ -6,13 +6,13 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "mkdir -p build && g++ app_installer.cc -std=c++17 -Ilibs/webview $(pkg-config --cflags --libs gtk+-3.0 webkit2gtk-4.0) -o build/app_installer",
+      "command": "sh scripts/build.sh",
       "problemMatcher": []
     },
     {
       "label": "test",
       "type": "shell",
-      "command": "./build/app_installer /tmp/*.tar.xz",
+      "command": "./build/* /tmp/*.tar.xz",
       "problemMatcher": []
     },
     {
@@ -22,10 +22,16 @@
       "problemMatcher": []
     },
     {
-      "label": "build_iso",
+      "label": "package",
       "type": "shell",
-      "command": "sh scripts/build_iso.sh",
+      "command": "sh scripts/package.sh",
       "problemMatcher": []
-    }
+    },
+    {
+      "label": "build_appimage",
+      "type": "shell",
+      "command": "appimage-builder --recipe AppImageBuilder.yml --skip-test",
+      "problemMatcher": []
+    },
   ]
 }
