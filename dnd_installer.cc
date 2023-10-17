@@ -14,7 +14,7 @@ struct target_file
 };
 
 target_file resolve_file(string path);
-int install_command(target_file path);
+int install_command(target_file file);
 
 string allowed_file_extensions[6] = {".deb", ".rpm", ".zip", ".tar", ".gz", ".tgz"};
 
