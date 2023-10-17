@@ -5,33 +5,63 @@
 
 using namespace std;
 
-int install_command(string path);
+struct target_file
+{
+  string path;
+  string name;
+  string basename;
+  string extension;
+};
+
+target_file resolve_file(string path);
+int install_command(target_file path);
+
+string allowed_file_extensions[6] = {".deb", ".rpm", ".zip", ".tar", ".gz", ".tgz"};
 
 int main(int argc, char *argv[])
 {
-  if (argc < 2)
+  string program = string(argv[0]);
+
+  if (argc < 2 || argc > 3)
   {
-    cout << "Usage: " << argv[0] << " <string>" << endl;
+    cout << "Usage: " << program << " <file_path>" << endl;
     return 1;
+  }
+
+  string path = string(string(argv[1]) == "install" ? argv[2] : argv[1]);
+
+  if (!filesystem::exists(path))
+  {
+    cout << "File don't exists." << endl;
+    return 2;
   }
 
   if (argc == 3)
   {
-    if (string(argv[1]) == "install")
+    target_file file = resolve_file(path);
+
+    bool is_valid_file = false;
+
+    for (string ext : allowed_file_extensions)
     {
-      string path = string(argv[2]);
-
-      return install_command(path);
+      if (file.extension == ext)
+      {
+        is_valid_file = true;
+        break;
+      }
     }
-    return 2;
-  }
 
-  if (argc > 3)
-  {
-    return 3;
-  }
+    if (!is_valid_file)
+    {
+      cout << "Invalid file." << endl;
+      return 3;
+    }
 
-  string path = string(argv[1]);
+    int install_result = install_command(file);
+
+    cout << "Install result: " << install_result << endl;
+    return install_result;
+  }
 
   webview::webview w(false, nullptr);
   w.set_title("Drag and drop to install");
@@ -43,7 +73,7 @@ int main(int argc, char *argv[])
       {
         thread([&, seq, req]
                {
-                  int status = system(command_as_root("dnd_installer install " + path).c_str());
+                  int status = system(command_as_root(program + " install " + path).c_str());
                      
                   system(status == 0 ? "notify-send 'Successfully installed'" : "notify-send 'Failed to install'");
      
@@ -60,34 +90,40 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-int install_command(string path)
+target_file resolve_file(string path)
 {
-  filesystem::path filepath(path);
-  string filename = filepath.stem().string();
-  string fileextension = filepath.extension().string();
-  filesystem::path filepath_without_double_ext(filename);
-  string filename_without_ext = filepath_without_double_ext.stem().string();
+  target_file file;
 
-  string tmp_dir = "/tmp/" + filename_without_ext;
+  file.path = path;
+  file.basename = filesystem::path(path).stem().string();
+  file.extension = filesystem::path(path).extension().string();
+  file.name = filesystem::path(file.basename).stem().string();
+
+  return file;
+}
+
+int install_command(target_file file)
+{
+  string tmp_dir = "/tmp/" + file.name;
   string mkdir_cmd = "rm -rf " + tmp_dir + " && mkdir -p " + tmp_dir;
 
-  string tar_cmd = "tar -xf " + path + " -C " + tmp_dir;
-  string zip_cmd = "unzip " + path + " -d " + tmp_dir;
-  string deb_cmd = "apt install -y " + path;
-  string rpm_cmd = "rpm --force -i " + path;
+  string tar_cmd = "tar -xf " + file.path + " -C " + tmp_dir;
+  string zip_cmd = "unzip " + file.path + " -d " + tmp_dir;
+  string deb_cmd = "apt install -y " + file.path;
+  string rpm_cmd = "rpm --force -i " + file.path;
 
   string install_cmd = tar_cmd;
 
-  if (fileextension == ".deb")
+  if (file.extension == ".deb")
   {
     return system(deb_cmd.c_str());
   }
-  else if (fileextension == ".rpm")
+  else if (file.extension == ".rpm")
   {
     return system(rpm_cmd.c_str());
   }
 
-  if (fileextension == ".zip")
+  if (file.extension == ".zip")
   {
     install_cmd = zip_cmd;
   }
