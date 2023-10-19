@@ -10,7 +10,7 @@ AppDir:
   path: ./AppDir
   app_info:
     id: com.eduhds.dnd_installer
-    name: AppInstaller
+    name: dnd_installer
     icon: application-vnd.appimage
     version: latest
     exec: usr/bin/dnd_installer
