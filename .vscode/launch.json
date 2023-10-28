@@ -12,7 +12,7 @@
       "externalConsole": false,
       "MIMode": "gdb",
       "miDebuggerPath": "/usr/bin/gdb",
-      "preLaunchTask": "build",
+      "preLaunchTask": "build-debug",
       "setupCommands": [
         {
           "description": "Habilitar a reformatação automática para gdb",

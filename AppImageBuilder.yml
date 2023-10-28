@@ -4,8 +4,8 @@ script:
   - rm -rf AppDir 2> /dev/null || true
   - rm *.AppImage* 2> /dev/null || true
   - mkdir -p AppDir && mkdir -p AppDir/usr && mkdir -p AppDir/usr/bin
-  - cp build/* AppDir/usr/bin
-  - for lib in $(ldd build/* | grep -E -o '/.*\.([0-9]{0,})'); do cp -L --parents "$lib" AppDir; done
+  - cp build/release/* AppDir/usr/bin
+  - for lib in $(ldd build/release/* | grep -E -o '/.*\.([0-9]{0,})'); do cp -L --parents "$lib" AppDir; done
 AppDir:
   path: ./AppDir
   app_info:

@@ -3,13 +3,24 @@
   "tasks": [
     {
       "type": "cppbuild",
-      "label": "build",
+      "label": "build-debug",
       "command": "sh",
-      "args": ["scripts/build.sh"],
+      "args": ["scripts/build.sh", "-d"],
       "problemMatcher": [],
       "group": {
         "kind": "build",
         "isDefault": true
+      }
+    },
+    {
+      "type": "cppbuild",
+      "label": "build-release",
+      "command": "sh",
+      "args": ["scripts/build.sh", "-r"],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
       }
     },
     {
@@ -28,12 +39,6 @@
       "label": "package",
       "type": "shell",
       "command": "sh scripts/package.sh",
-      "problemMatcher": []
-    },
-    {
-      "label": "build_appimage",
-      "type": "shell",
-      "command": "appimage-builder --recipe AppImageBuilder.yml --skip-test",
       "problemMatcher": []
     }
   ]
