@@ -2,7 +2,7 @@
 
 A drag and drop installer for Linux.
 
-<image src="screenshot.png" alt="Screenshot" />
+<img src="screenshot.png" alt="Screenshot" />
 
 ## Get started
 
