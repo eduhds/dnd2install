@@ -13,7 +13,12 @@ if [ "$1" = "-r" ]; then
         -Ilibs/webview $(pkg-config --cflags --libs gtk+-3.0 webkit2gtk-4.0) \
         -o "build/release/$out_name"
 
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
+
     # Build AppImage
+    rm -rf AppDir
     rm -rf dist
     mkdir dist
     
