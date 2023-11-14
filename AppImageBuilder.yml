@@ -9,11 +9,11 @@ script:
 AppDir:
   path: ./AppDir
   app_info:
-    id: com.eduhds.dnd_installer
-    name: dnd_installer
+    id: com.eduhds.dnd2install
+    name: dnd2install
     icon: application-vnd.appimage
     version: latest
-    exec: usr/bin/dnd_installer
+    exec: usr/bin/dnd2install
     exec_args: $@
   files:
     include:

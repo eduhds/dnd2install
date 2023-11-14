@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  string path = string(string(argv[1]) == "install" ? argv[2] : argv[1]);
+  string path = string(string(argv[1]) == "-i" ? argv[2] : argv[1]);
 
   if (!filesystem::exists(path))
   {
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
       {
         thread([&, seq, req]
                {
-                  int status = system(command_as_root(program + " install " + path).c_str());
+                  int status = system(command_as_root(program + " -i " + path).c_str());
                      
                   system(status == 0 ? "notify-send 'Successfully installed'" : "notify-send 'Failed to install'");
      
@@ -136,6 +136,8 @@ int install_command(target_file file)
     else
       cp -r $tmp_dir /opt
     fi
+
+    if [ $? -eq 0 ]; then xdg-open /opt || true; fi
   )";
 
   return system((mkdir_cmd + " && " + install_cmd + " && " + cp_cmd).c_str());
