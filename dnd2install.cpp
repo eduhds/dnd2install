@@ -1,7 +1,7 @@
 #include <iostream>
 #include <filesystem>
 #include "webview.h"
-#include "dnd_installer.hh"
+#include "dnd2install.hh"
 
 using namespace std;
 
