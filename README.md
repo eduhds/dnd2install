@@ -1,4 +1,14 @@
-# Dnd Installer
+# Dnd2Install
+
+A drag and drop installer for Linux.
+
+:::image type="content" source="screenshot.png" alt-text="Screenshot":::
+
+## Get started
+
+1. Right click on file `.rpm`, `.deb`, `.tar.gz`, `.zip`
+2. Click "Open with" > "Drag and drop to install"
+
 
 ## Credits
 
