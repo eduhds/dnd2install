@@ -18,19 +18,19 @@ if [ "$1" = "-r" ]; then
     fi
 
     # Build AppImage
-    rm -rf AppDir
-    rm -rf dist
-    mkdir dist
-    
-    appimage-builder --recipe AppImageBuilder.yml --skip-test
-
-    if [ $? -ne 0 ]; then
-        rm -rf dist
-        exit 1
-    else
-        mv *.AppImage* dist
-        cp *.desktop *.png dist
-    fi
+    #rm -rf AppDir
+    #rm -rf dist
+    #mkdir dist
+    #
+    #appimage-builder --recipe AppImageBuilder.yml --skip-test
+    #
+    #if [ $? -ne 0 ]; then
+    #    rm -rf dist
+    #    exit 1
+    #else
+    #    mv *.AppImage* dist
+    #    cp *.desktop *.png dist
+    #fi
 elif [ "$1" = "-d" ]; then
     # Build for debug
     mkdir -p build
