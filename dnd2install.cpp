@@ -67,12 +67,10 @@ int main(int argc, char *argv[])
   w.set_title("Drag and drop to install");
   w.set_size(480, 320, WEBVIEW_HINT_NONE);
 
-  w.bind(
-      "install",
-      [&](const string &seq, const string &req, void * /*arg*/)
-      {
-        thread([&, seq, req]
-               {
+  auto bindInstall = [&](const string &seq, const string &req, void * /*arg*/)
+  {
+    thread([&, seq, req]
+           {
                   int status = system(command_as_root(program + " -i " + path).c_str());
                      
                   system(status == 0 ? "notify-send 'Successfully installed'" : "notify-send 'Failed to install'");
@@ -80,9 +78,10 @@ int main(int argc, char *argv[])
                   string result = "{\"path\":\"" + path + "\",\"status\":" + to_string(status) + "}";
 
                   w.resolve(seq, status,  result); })
-            .detach();
-      },
-      nullptr);
+        .detach();
+  };
+
+  w.bind("install", bindInstall, nullptr);
 
   w.set_html(html);
   w.run();
