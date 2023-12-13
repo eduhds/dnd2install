@@ -80,7 +80,7 @@ cp %{name}.png \$RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/96x96/apps
     mv ~/rpmbuild/RPMS/x86_64/$out_name*.rpm dist/rpm
 elif [ "$1" = "-deb" ]; then
     # Build DEB
-     rm -rf dist/deb 2> /dev/null || true && mkdir dist/deb
+    rm -rf dist/deb 2> /dev/null || true && mkdir dist/deb
     deb_src=dist/deb/$out_name-$version
     
     mkdir $deb_src
