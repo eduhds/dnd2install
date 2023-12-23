@@ -94,8 +94,15 @@ elif [ "$1" = "--deb" ]; then
 
     echo "NAME=$out_name" > $deb_src/etc/$out_name.conf
 
-    strip ---strip-debug --strip-unneeded \
-        -o $deb_src/usr/bin/$out_name build/release/$out_name
+    strip --strip-debug --strip-unneeded \
+        -o $deb_src/usr/bin/$out_name \
+        build/release/$out_name
+
+    if [ $? -ne 0 ]; then
+        echo "Failed to strip binary"
+        exit 1
+    fi
+
     cp $out_name.desktop $deb_src/usr/share/applications
     cp $out_name.png $deb_src/usr/share/icons/hicolor/96x96/apps
 
@@ -128,12 +135,12 @@ See /usr/share/common-licenses/(GPL|LGPL)" > $deb_src/usr/share/doc/$out_name/co
 Version: $version
 Section: utils
 Priority: optional
-Architecture: binary-arch
+Architecture: all
 Maintainer: $(git config --global user.name) <$(git config --global user.email)>
 Description: A drag and drop installer for Linux
     Install tarballs, .deb or .rpm packages
 Homepage: https://github.com/eduhds/dnd2install
-Depends: libc6, libgtk (>= 3.0), libwebkit2gtk (>= 4.0)
+Depends: libc6, libgtk-3-0, libwebkit2gtk-4.0-37
 Package-Type: deb" > $deb_src/DEBIAN/control
 
     echo "/etc/$out_name.conf" > $deb_src/DEBIAN/conffiles
