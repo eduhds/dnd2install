@@ -8,7 +8,7 @@ if [ "$1" = "-r" ]; then
     mkdir -p build
     rm -rf build/release && mkdir build/release
 
-    g++ *.cpp \
+    g++ *.cpp -O3 \
         -static-libgcc -static-libstdc++ -std=c++17 \
         -Ilibs/webview $(pkg-config --cflags --libs gtk+-3.0 webkit2gtk-4.0) \
         -o "build/release/$out_name"
