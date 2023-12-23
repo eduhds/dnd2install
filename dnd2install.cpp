@@ -13,10 +13,11 @@ struct target_file
   string extension;
 };
 
-target_file resolve_file(string path);
-int install_command(target_file file);
+target_file resolveFile(string path);
+int installCommand(target_file file);
 
-string allowed_file_extensions[6] = {".deb", ".rpm", ".zip", ".tar", ".gz", ".tgz"};
+string allowedExtensions[6] = {".deb", ".rpm", ".zip", ".tar", ".gz", ".tgz"};
+string currentExtension = "";
 
 int main(int argc, char *argv[])
 {
@@ -38,11 +39,11 @@ int main(int argc, char *argv[])
 
   if (argc == 3)
   {
-    target_file file = resolve_file(path);
+    target_file file = resolveFile(path);
 
     bool is_valid_file = false;
 
-    for (string ext : allowed_file_extensions)
+    for (string ext : allowedExtensions)
     {
       if (file.extension == ext)
       {
@@ -57,11 +58,14 @@ int main(int argc, char *argv[])
       return 3;
     }
 
-    int install_result = install_command(file);
+    int install_result = installCommand(file);
 
     cout << "Install result: " << install_result << endl;
     return install_result;
   }
+
+  target_file file = resolveFile(path);
+  currentExtension = file.extension;
 
   webview::webview w(false, nullptr);
   w.set_title("Drag and drop to install");
@@ -72,8 +76,11 @@ int main(int argc, char *argv[])
     thread([&, seq, req]
            {
                   int status = system(command_as_root(program + " -i " + path).c_str());
-                     
-                  system(status == 0 ? "notify-send 'Successfully installed'" : "notify-send 'Failed to install'");
+
+                  string msg = currentExtension != ".deb" && currentExtension != ".rpm" ? " in /opt" : "";
+                  msg = "notify-send 'Successfully installed" + msg + "'";
+
+                  system(status == 0 ? msg.c_str() : "notify-send 'Failed to install'");
      
                   string result = "{\"path\":\"" + path + "\",\"status\":" + to_string(status) + "}";
 
@@ -89,7 +96,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-target_file resolve_file(string path)
+target_file resolveFile(string path)
 {
   target_file file;
 
@@ -101,7 +108,7 @@ target_file resolve_file(string path)
   return file;
 }
 
-int install_command(target_file file)
+int installCommand(target_file file)
 {
   string tmp_dir = "/tmp/" + file.name;
   string mkdir_cmd = "rm -rf " + tmp_dir + " && mkdir -p " + tmp_dir;
