@@ -135,7 +135,7 @@ See /usr/share/common-licenses/(GPL|LGPL)" > $deb_src/usr/share/doc/$out_name/co
 Version: $version
 Section: utils
 Priority: optional
-Architecture: all
+Architecture: amd64
 Maintainer: $(git config --global user.name) <$(git config --global user.email)>
 Description: A drag and drop installer for Linux
     Install tarballs, .deb or .rpm packages
