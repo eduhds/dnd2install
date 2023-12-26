@@ -11,6 +11,12 @@ A drag and drop installer for Linux.
 
 ## Get started
 
+### Download
+
+- Download package from [Releases](https://github.com/eduhds/dnd2install/releases)
+
+### Usage
+
 1. Right click on file `.rpm`, `.deb` or tarballs
 2. Click "Open with" > "Drag and drop to install"
 
