@@ -18,11 +18,11 @@ A drag and drop installer for Linux.
 ```sh
 # Debian
 wget https://github.com/eduhds/dnd2install/releases/download/0.0.1/dnd2install-0.0.1.deb
-sudo apt install ./dnd2install-0.0.1.deb
+sudo apt install -y ./dnd2install-0.0.1.deb
 
 # Fedora
 wget https://github.com/eduhds/dnd2install/releases/download/0.0.1/dnd2install-0.0.1.rpm
-sudo dnf install ./dnd2install-0.0.1.rpm
+sudo dnf install -y ./dnd2install-0.0.1.rpm
 ```
 
 ### Usage
