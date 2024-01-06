@@ -1,7 +1,19 @@
+/**
+ * Dnd2Install
+ * A drag and drop installer for Linux.
+ * Created by Eduardo H. da Silva on 15/11/2023
+ */
+
 #include <iostream>
 #include <filesystem>
-#include "webview.h"
+#include "libs/webview.h"
+#include "libs/argparse.hpp"
 #include "dnd2install.hpp"
+#include "util.hpp"
+
+#define PROGRAM_NAME "dnd2install"
+#define PROGRAM_VERSION "1.0.0"
+#define INSTALL_DIR_ENV "INSTALL_DIR"
 
 using namespace std;
 
@@ -18,54 +30,60 @@ int installCommand(target_file file);
 
 string allowedExtensions[6] = {".deb", ".rpm", ".zip", ".tar", ".gz", ".tgz"};
 string currentExtension = "";
+string installDir = "";
 
 int main(int argc, char *argv[])
 {
-  string program = string(argv[0]);
+  argparse::ArgumentParser program(PROGRAM_NAME, PROGRAM_VERSION);
 
-  if (argc < 2 || argc > 3)
+  program.add_argument("file")
+      .help("file to install")
+      .required();
+
+  string path;
+
+  try
   {
-    cout << "Usage: " << program << " <file_path>" << endl;
-    return 1;
-  }
+    program.parse_args(argc, argv);
 
-  string path = string(string(argv[1]) == "-i" ? argv[2] : argv[1]);
+    path = program.get<string>("file");
 
-  if (!filesystem::exists(path))
-  {
-    cout << "File don't exists." << endl;
-    return 2;
-  }
-
-  if (argc == 3)
-  {
-    target_file file = resolveFile(path);
-
-    bool is_valid_file = false;
-
-    for (string ext : allowedExtensions)
+    if (!filesystem::exists(path) || filesystem::is_directory(path))
     {
-      if (file.extension == ext)
-      {
-        is_valid_file = true;
-        break;
-      }
+      throw runtime_error("File don't exists: " + path + ".\n");
     }
-
-    if (!is_valid_file)
-    {
-      cout << "Invalid file." << endl;
-      return 3;
-    }
-
-    int install_result = installCommand(file);
-
-    cout << "Install result: " << install_result << endl;
-    return install_result;
+  }
+  catch (const exception &err)
+  {
+    cerr << err.what() << endl;
+    cerr << program;
+    exit(1);
   }
 
   target_file file = resolveFile(path);
   currentExtension = file.extension;
+
+  bool is_valid_file = false;
+
+  for (string ext : allowedExtensions)
+  {
+    if (file.extension == ext)
+    {
+      is_valid_file = true;
+      break;
+    }
+  }
+
+  if (!is_valid_file)
+  {
+    cout << "Invalid file." << endl;
+    return 1;
+  }
+
+  if (getenv(INSTALL_DIR_ENV) != NULL)
+  {
+    installDir = getenv(INSTALL_DIR_ENV);
+  }
 
   webview::webview w(false, nullptr);
   w.set_title("Drag and drop to install");
@@ -73,19 +91,22 @@ int main(int argc, char *argv[])
 
   auto bindInstall = [&](const string &seq, const string &req, void * /*arg*/)
   {
-    thread([&, seq, req]
-           {
-                  int status = system(command_as_root(program + " -i " + path).c_str());
+    auto installThread = [&, seq, req]()
+    {
+      int status = installCommand(file);
+      cout << "Install result: " << status << endl;
 
-                  string msg = currentExtension != ".deb" && currentExtension != ".rpm" ? " in /opt" : "";
-                  msg = "notify-send 'Successfully installed" + msg + "'";
+      string msg = currentExtension != ".deb" && currentExtension != ".rpm" ? " in /opt" : "";
+      msg = "notify-send 'Successfully installed" + msg + "'";
 
-                  system(status == 0 ? msg.c_str() : "notify-send 'Failed to install'");
-     
-                  string result = "{\"path\":\"" + path + "\",\"status\":" + to_string(status) + "}";
+      system(status == 0 ? msg.c_str() : "notify-send 'Failed to install'");
 
-                  w.resolve(seq, status,  result); })
-        .detach();
+      string result = "{\"path\":\"" + path + "\",\"status\":" + to_string(status) + "}";
+
+      w.resolve(seq, status, result);
+    };
+
+    thread(installThread).detach();
   };
 
   w.bind("install", bindInstall, nullptr);
@@ -143,7 +164,7 @@ int installCommand(target_file file)
       cp -r $tmp_dir /opt
     fi
 
-    if [ $? -eq 0 ]; then xdg-open /opt || true; fi
+    # if [ $? -eq 0 ]; then xdg-open /opt || true; fi
   )";
 
   return system((mkdir_cmd + " && " + install_cmd + " && " + cp_cmd).c_str());
