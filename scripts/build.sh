@@ -1,6 +1,6 @@
 #!/bin/sh
 
-out_name="$(basename $(pwd))"
+app_name="$(basename $(pwd))"
 
 if [ "$1" = "-r" ]; then
     # Build for release
@@ -11,7 +11,7 @@ if [ "$1" = "-r" ]; then
     g++ *.cpp -O3 \
         -static-libgcc -static-libstdc++ -std=c++17 \
         -Ilibs/webview $(pkg-config --cflags --libs gtk+-3.0 webkit2gtk-4.0) \
-        -o "build/release/$out_name"
+        -o "build/release/$app_name"
 
     if [ $? -ne 0 ]; then
         exit 1
@@ -38,11 +38,16 @@ elif [ "$1" = "-d" ]; then
 
     g++ *.cpp \
         -g -std=c++17 \
-        -Ilibs/webview $(pkg-config --cflags --libs gtk+-3.0 webkit2gtk-4.0) \
-        -o "build/debug/$out_name"
+        $(pkg-config --cflags --libs gtk+-3.0 webkit2gtk-4.0) \
+        -ldl \
+        -o "build/debug/$app_name"
+
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
 
     # Example for use as argument to test
-    tar -czvf "build/debug/$out_name.tgz" "build/debug/$out_name"
+    tar -czvf build/debug/$app_name.tgz build/debug/$app_name > /dev/null
 else
     echo "Usage: $0 [-r] [-d]"
     exit 1
