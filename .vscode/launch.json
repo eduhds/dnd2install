@@ -6,7 +6,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build/debug/${workspaceFolderBasename}",
-      "args": ["install", "${workspaceFolder}/build/debug/${workspaceFolderBasename}.tgz"],
+      "args": ["${workspaceFolder}/build/debug/${workspaceFolderBasename}.tgz"],
       "cwd": "${workspaceFolder}",
       "environment": [],
       "externalConsole": false,
