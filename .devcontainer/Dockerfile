@@ -20,13 +20,3 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
 # Install dependencies
 RUN sudo apt update -y
 RUN sudo apt install -y libgtk-3-dev libwebkit2gtk-4.0-dev file genisoimage
-
-# Install AppImage Builder
-RUN wget -O appimage-builder-x86_64.AppImage https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.1.0/appimage-builder-1.1.0-x86_64.AppImage
-RUN chmod +x appimage-builder-x86_64.AppImage
-RUN sudo mv appimage-builder-x86_64.AppImage /usr/local/bin/appimage-builder
-
-# Install linuxdeploy
-RUN wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-RUN chmod +x linuxdeploy-x86_64.AppImage 
-RUN sudo mv linuxdeploy-x86_64.AppImage /usr/local/bin/linuxdeploy
