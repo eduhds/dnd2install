@@ -2,10 +2,11 @@
 Encoding=UTF-8
 Version=1.0
 Type=Application
-Exec=dnd2install %f
+Exec=dnd2install-launcher %f
 Name=Drag and drop to install
 Icon=dnd2install
 Comment=A drag and drop installer
 NoDisplay=true
 Categories=Utility;FileTools
 MimeType=application/gzip;application/zip;application/vnd.debian.binary-package;application/x-rpm
+Terminal=false
