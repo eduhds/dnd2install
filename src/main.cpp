@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     {
       int status = installCommand(file);
 
-      if (status)
+      if (status == 0)
       {
         string msg = currentExtension != ".deb" && currentExtension != ".rpm" ? " in " + installDir : "";
         notifySend("Successfully installed" + msg);
