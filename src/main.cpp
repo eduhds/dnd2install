@@ -20,7 +20,6 @@ using namespace std;
 target_file resolveFile(string path);
 int installCommand(target_file file);
 
-const string allowedExtensions[6] = {".deb", ".rpm", ".zip", ".tar", ".gz", ".tgz"};
 string currentExtension = "";
 string installDir = "/opt";
 
