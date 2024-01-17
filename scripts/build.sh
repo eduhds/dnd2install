@@ -4,7 +4,6 @@ app_name="$(basename $(pwd))"
 
 if [ "$1" = "-r" ]; then
     # Build for release
-
     mkdir -p build
     rm -rf build/release && mkdir build/release
 
@@ -16,21 +15,6 @@ if [ "$1" = "-r" ]; then
     if [ $? -ne 0 ]; then
         exit 1
     fi
-
-    # Build AppImage
-    #rm -rf AppDir
-    #rm -rf dist
-    #mkdir dist
-    #
-    #appimage-builder --recipe AppImageBuilder.yml --skip-test
-    #
-    #if [ $? -ne 0 ]; then
-    #    rm -rf dist
-    #    exit 1
-    #else
-    #    mv *.AppImage* dist
-    #    cp *.desktop *.png dist
-    #fi
 elif [ "$1" = "-d" ]; then
     # Build for debug
     mkdir -p build
@@ -47,7 +31,10 @@ elif [ "$1" = "-d" ]; then
     fi
 
     # Example for use as argument to test
-    tar -czvf build/debug/$app_name.tgz build/debug/$app_name > /dev/null
+    mkdir -p build/debug/test
+    tar -C build/debug \
+        -czvf build/debug/test/$app_name.tgz \
+        $app_name > /dev/null
 else
     echo "Usage: $0 [-r] [-d]"
     exit 1

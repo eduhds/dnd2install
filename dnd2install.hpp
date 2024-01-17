@@ -152,26 +152,3 @@ const std::string html = R"html(
   </body>
 </html>
 )html";
-
-std::string command_as_root(std::string command)
-{
-  return R"(
-install_command=')" +
-         command + R"('
-if [ "$XDG_SESSION_TYPE" = "wayland" ] ; then
-    xhost +SI:localuser:root
-    pkexec ${install_command}
-    xhost -SI:localuser:root
-    xhost
-elif command -v pkexec >/dev/null 2>&1; then
-    pkexec ${install_command}
-elif command -v sudo >/dev/null 2>&1; then
-    x-terminal-emulator -e "sudo ${install_command}"
-elif command -v su >/dev/null 2>&1; then
-    x-terminal-emulator -e "su - -c '${install_command}'"
-else
-    x-terminal-emulator -e "echo 'Command must be run as root user: ${install_command}'"
-fi
-if [ $? -ne 0 ]; then exit 1; fi
-)";
-}

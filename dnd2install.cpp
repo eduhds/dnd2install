@@ -17,27 +17,19 @@
 
 using namespace std;
 
-struct target_file
-{
-  string path;
-  string name;
-  string basename;
-  string extension;
-};
-
 target_file resolveFile(string path);
 int installCommand(target_file file);
 
-string allowedExtensions[6] = {".deb", ".rpm", ".zip", ".tar", ".gz", ".tgz"};
+const string allowedExtensions[6] = {".deb", ".rpm", ".zip", ".tar", ".gz", ".tgz"};
 string currentExtension = "";
-string installDir = "";
+string installDir = "/opt";
 
 int main(int argc, char *argv[])
 {
   argparse::ArgumentParser program(PROGRAM_NAME, PROGRAM_VERSION);
 
   program.add_argument("file")
-      .help("file to install")
+      .help("Tarball, RPM or DEB package file path")
       .required();
 
   string path;
@@ -94,12 +86,16 @@ int main(int argc, char *argv[])
     auto installThread = [&, seq, req]()
     {
       int status = installCommand(file);
-      cout << "Install result: " << status << endl;
 
-      string msg = currentExtension != ".deb" && currentExtension != ".rpm" ? " in /opt" : "";
-      msg = "notify-send 'Successfully installed" + msg + "'";
-
-      system(status == 0 ? msg.c_str() : "notify-send 'Failed to install'");
+      if (status)
+      {
+        string msg = currentExtension != ".deb" && currentExtension != ".rpm" ? " in " + installDir : "";
+        notifySend("Successfully installed" + msg);
+      }
+      else
+      {
+        notifySend("Failed to install");
+      }
 
       string result = "{\"path\":\"" + path + "\",\"status\":" + to_string(status) + "}";
 
@@ -155,17 +151,10 @@ int installCommand(target_file file)
     install_cmd = zip_cmd;
   }
 
-  string cp_cmd = R"(
-    tmp_dir=)" + tmp_dir +
-                  R"(
-    if [ $(ls -1Ua $tmp_dir | wc -l) -eq 3 ] && [ -d $tmp_dir/* ]; then
-      cp -r $tmp_dir/* /opt
-    else
-      cp -r $tmp_dir /opt
-    fi
-
-    # if [ $? -eq 0 ]; then xdg-open /opt || true; fi
-  )";
+  string cp_cmd = "tmp_dir=" + tmp_dir;
+  cp_cmd += "; if [ $(ls -1Ua $tmp_dir | wc -l) -eq 3 ] && [ -d $tmp_dir/* ]";
+  cp_cmd += "; then cp -r $tmp_dir/* " + installDir; // Avoid unucessary subdirectory
+  cp_cmd += "; else cp -r $tmp_dir " + installDir + "; fi";
 
   return system((mkdir_cmd + " && " + install_cmd + " && " + cp_cmd).c_str());
 }
