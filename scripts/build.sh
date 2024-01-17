@@ -8,7 +8,7 @@ if [ "$1" = "-r" ]; then
     rm -rf build/release && mkdir build/release
 
     g++ src/*.cpp -O3 \
-        -static-libgcc -static-libstdc++ -std=c++17 \
+        -static-libgcc -static-libstdc++ -std=c++17 -ldl \
         -Ilibs/webview $(pkg-config --cflags --libs gtk+-3.0 webkit2gtk-4.0) \
         -o "build/release/$app_name"
 
@@ -21,9 +21,8 @@ elif [ "$1" = "-d" ]; then
     rm -rf build/debug && mkdir build/debug
 
     g++ src/*.cpp \
-        -g -std=c++17 \
+        -g -std=c++17 -ldl \
         $(pkg-config --cflags --libs gtk+-3.0 webkit2gtk-4.0) \
-        -ldl \
         -o "build/debug/$app_name"
 
     if [ $? -ne 0 ]; then
