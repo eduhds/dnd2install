@@ -6,8 +6,8 @@
 
 #include <iostream>
 #include <filesystem>
-#include "libs/webview.h"
-#include "libs/argparse.hpp"
+#include "../libs/webview.h"
+#include "../libs/argparse.hpp"
 #include "dnd2install.hpp"
 #include "util.hpp"
 
