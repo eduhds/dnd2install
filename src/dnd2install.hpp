@@ -85,6 +85,9 @@ const std::string html = R"html(
     </style>
 
     <script>
+      // Disable context menu
+      window.addEventListener('contextmenu', event => event.preventDefault());
+
       function onDragStart(event) {
         event.dataTransfer.setData('text/plain', event.target.id);
       }
