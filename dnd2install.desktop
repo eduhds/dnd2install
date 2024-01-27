@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Version=1.0
 Type=Application
-Exec=dnd2install-launcher %f
+Exec=dnd2install %f
 Name=Drag and drop to install
 Icon=dnd2install
 Comment=A drag and drop installer

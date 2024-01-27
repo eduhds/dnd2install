@@ -1,0 +1,33 @@
+#!/bin/bash
+
+PKG_TYPE=$1
+ORIGIN_PATH=$2
+PKG_NAME=$3
+DEST_PATH=$4
+
+if [ "$PKG_TYPE" == "deb" ]; then
+  apt install -y $ORIGIN_PATH
+elif [ "$PKG_TYPE" == "rpm" ]; then
+  rpm --force -i $ORIGIN_PATH
+else
+	TEMP_DIR="/tmp/$PKG_NAME"
+
+	if [ "$PKG_TYPE" == "zip" ]; then
+  	INSTALL_CMD="unzip $ORIGIN_PATH -d $TEMP_DIR"
+	else
+  	INSTALL_CMD="tar -xf $ORIGIN_PATH -C $TEMP_DIR"
+	fi
+
+  rm -rf $TEMP_DIR 2> /dev/null
+  mkdir -p $TEMP_DIR
+  
+  $INSTALL_CMD
+
+	if [ $(ls -1Ua $TEMP_DIR | wc -l) -eq 3 ] && [ -d $TEMP_DIR/* ]; then
+    cp -r $TEMP_DIR/* $DEST_PATH
+  else 
+    cp -r $TEMP_DIR $DEST_PATH
+  fi
+fi
+
+exit $?

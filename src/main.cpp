@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 
       if (status == 0)
       {
-        string msg = currentExtension != ".deb" && currentExtension != ".rpm" ? " in " + installDir : "";
+        string msg = currentExtension != ".deb" && currentExtension != ".rpm" ? " in " + installDir + "/" + file.name : "";
         notifySend("Successfully installed" + msg);
       }
       else
@@ -126,34 +126,28 @@ target_file resolveFile(string path)
 
 int installCommand(target_file file)
 {
-  string tmp_dir = "/tmp/" + file.name;
-  string mkdir_cmd = "rm -rf " + tmp_dir + " && mkdir -p " + tmp_dir;
-
-  string tar_cmd = "tar -xf " + file.path + " -C " + tmp_dir;
-  string zip_cmd = "unzip " + file.path + " -d " + tmp_dir;
-  string deb_cmd = "apt install -y " + file.path;
-  string rpm_cmd = "rpm --force -i " + file.path;
-
-  string install_cmd = tar_cmd;
+  string installCmd = "dnd2install-launcher";
 
   if (file.extension == ".deb")
   {
-    return system(deb_cmd.c_str());
+    installCmd += " deb";
   }
   else if (file.extension == ".rpm")
   {
-    return system(rpm_cmd.c_str());
+    installCmd += " rpm";
   }
-
-  if (file.extension == ".zip")
+  else if (file.extension == ".zip")
   {
-    install_cmd = zip_cmd;
+    installCmd += " zip";
+  }
+  else
+  {
+    installCmd += " tar";
   }
 
-  string cp_cmd = "tmp_dir=" + tmp_dir;
-  cp_cmd += "; if [ $(ls -1Ua $tmp_dir | wc -l) -eq 3 ] && [ -d $tmp_dir/* ]";
-  cp_cmd += "; then cp -r $tmp_dir/* " + installDir; // Avoid unucessary subdirectory
-  cp_cmd += "; else cp -r $tmp_dir " + installDir + "; fi";
+  installCmd += " " + file.path;
+  installCmd += " " + file.name;
+  installCmd += " " + installDir;
 
-  return system((mkdir_cmd + " && " + install_cmd + " && " + cp_cmd).c_str());
+  return system(installCmd.c_str());
 }
