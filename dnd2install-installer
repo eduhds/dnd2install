@@ -6,10 +6,13 @@ PKG_NAME=$3
 DEST_PATH=$4
 
 if [ "$PKG_TYPE" == "deb" ]; then
+  # Install .deb package
   apt install -y $ORIGIN_PATH
 elif [ "$PKG_TYPE" == "rpm" ]; then
+  # Install .rpm package
   rpm --force -i $ORIGIN_PATH
 else
+  # Install tarball package
 	TEMP_DIR="/tmp/$PKG_NAME"
 
 	if [ "$PKG_TYPE" == "zip" ]; then
@@ -24,9 +27,52 @@ else
   $INSTALL_CMD
 
 	if [ $(ls -1Ua $TEMP_DIR | wc -l) -eq 3 ] && [ -d $TEMP_DIR/* ]; then
+    INTERMEDIATE_DIR="$(basename $TEMP_DIR/*)"
     cp -r $TEMP_DIR/* $DEST_PATH
   else 
+    INTERMEDIATE_DIR="$(basename $TEMP_DIR)"
     cp -r $TEMP_DIR $DEST_PATH
+  fi
+
+  # Desktop integration
+  OUTPUT_DIR="$DEST_PATH/$INTERMEDIATE_DIR"
+
+  if [ -f $OUTPUT_DIR/*.desktop ]; then
+    DESKTOP_FILE_SRC=$OUTPUT_DIR/*.desktop
+    DESKTOP_FILE_OUT="/tmp/dnd2Install-$(basename $DESKTOP_FILE_SRC)"
+
+    if [ -f "$DESKTOP_FILE_OUT" ]; then
+        rm $DESKTOP_FILE_OUT
+    fi
+
+    while read line
+    do
+      lineEntries=(${line//=/ })
+      
+      if [ ${lineEntries[0]} = "Name" ]; then
+        echo "$line (Dnd2Install)" >> $DESKTOP_FILE_OUT
+      elif [ ${lineEntries[0]} = "Exec" ]; then
+        executable="$OUTPUT_DIR/$(basename ${lineEntries[1]})"
+        
+        if [ -x "$executable" ]; then
+            echo "Exec=$executable" >> $DESKTOP_FILE_OUT
+        else
+            echo "$line" >> $DESKTOP_FILE_OUT
+        fi
+      elif [ ${lineEntries[0]} = "Icon" ]; then
+        icon="$OUTPUT_DIR/$(basename ${lineEntries[1]})"
+        
+        if [ -f "$icon" ]; then
+            echo "Icon=$icon" >> $DESKTOP_FILE_OUT
+        else
+            echo "$line" >> $DESKTOP_FILE_OUT
+        fi
+      else
+        echo "$line" >> $DESKTOP_FILE_OUT
+      fi
+    done < $DESKTOP_FILE_SRC
+
+    mv $DESKTOP_FILE_OUT /usr/share/applications
   fi
 fi
 
