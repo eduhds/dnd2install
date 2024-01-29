@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 
   if (!is_valid_file)
   {
-    cout << "Invalid file." << endl;
+    notifySend(file.path + " is not a valid file");
     return 1;
   }
 
