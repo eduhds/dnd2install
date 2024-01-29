@@ -19,4 +19,4 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
 
 # Install dependencies
 RUN sudo apt update -y
-RUN sudo apt install -y libgtk-3-dev libwebkit2gtk-4.0-dev file genisoimage
+RUN sudo apt install -y libgtk-3-dev libwebkit2gtk-4.0-dev file genisoimage lintian
