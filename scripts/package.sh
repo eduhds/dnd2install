@@ -149,7 +149,7 @@ Maintainer: $(git config --global user.name) <$(git config --global user.email)>
 Description: A drag and drop installer for Linux
     Install tarballs, .deb or .rpm packages
 Homepage: https://github.com/eduhds/dnd2install
-Depends: libc6, libgtk-3-0, libwebkit2gtk-4.0-37
+Depends: bash (>=5.1.4), libc6, libgtk-3-0, libwebkit2gtk-4.0-37
 Package-Type: deb" > $deb_src/DEBIAN/control
 
     echo "/etc/$app_name.conf" > $deb_src/DEBIAN/conffiles
