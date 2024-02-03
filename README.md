@@ -17,12 +17,12 @@ A drag and drop installer for Linux.
 
 ```sh
 # Debian
-wget https://github.com/eduhds/dnd2install/releases/download/0.0.1/dnd2install-0.0.1.deb
-sudo apt install -y ./dnd2install-0.0.1.deb
+wget https://github.com/eduhds/dnd2install/releases/download/v1.0.0/dnd2install-v1.0.0-x86_64.deb
+sudo apt install -y ./dnd2install*.deb
 
 # Fedora
-wget https://github.com/eduhds/dnd2install/releases/download/0.0.1/dnd2install-0.0.1.rpm
-sudo dnf install -y ./dnd2install-0.0.1.rpm
+wget https://github.com/eduhds/dnd2install/releases/download/v1.0.0/dnd2install-v1.0.0-x86_64.rpm
+sudo dnf install -y ./dnd2install*.rpm
 ```
 
 ### Usage
