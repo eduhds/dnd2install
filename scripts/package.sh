@@ -84,7 +84,7 @@ cp %{name}.png \$RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/96x96/apps
         exit 1
     fi
 
-    mv ~/rpmbuild/RPMS/x86_64/$app_name*.rpm dist/rpm/${app_name}-${version}-${arch}.rpm
+    mv ~/rpmbuild/RPMS/x86_64/$app_name*.rpm dist/rpm/${app_name}-v${version}-${arch}.rpm
 elif [ "$1" = "--deb" ]; then
     # Build DEB
     rm -rf dist/deb 2> /dev/null || true && mkdir dist/deb
@@ -158,9 +158,9 @@ Package-Type: deb" > $deb_src/DEBIAN/control
 
     dpkg -c dist/deb/$app_name-$version.deb
 
-    mv dist/deb/${app_name}-${version}.deb dist/deb/${app_name}-${version}-${arch}.deb
+    mv dist/deb/${app_name}-${version}.deb dist/deb/${app_name}-v${version}-${arch}.deb
 
-    lintian dist/deb/${app_name}-${version}-${arch}.deb
+    lintian dist/deb/*.deb
 elif [ "$1" = "--iso" ]; then
     # Build ISO
     if [ -f dist/deb/*.deb ] && [ -f dist/rpm/*.rpm ]; then
