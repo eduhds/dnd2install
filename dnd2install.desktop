@@ -8,5 +8,5 @@ Icon=dnd2install
 Comment=A drag and drop installer
 NoDisplay=true
 Categories=Utility;FileTools
-MimeType=application/gzip;application/zip;application/vnd.debian.binary-package;application/x-rpm
+MimeType=application/gzip;application/zip
 Terminal=false

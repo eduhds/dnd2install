@@ -1,6 +1,6 @@
 #include <string>
 
-const std::string allowedExtensions[7] = {".deb", ".rpm", ".zip", ".tar", ".gz", ".tgz", ".xz"};
+const std::string allowedExtensions[7] = {".zip", ".tar", ".gz", ".tgz", ".xz"};
 
 const std::string html = R"html(
 <html>

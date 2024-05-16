@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
   argparse::ArgumentParser program(PROGRAM_NAME, PROGRAM_VERSION);
 
   program.add_argument("file")
-      .help("Tarball, RPM or DEB package file path")
+      .help("Tarball package file path")
       .required();
 
   string path;
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 
       if (status == 0)
       {
-        string msg = currentExtension != ".deb" && currentExtension != ".rpm" ? " in " + installDir + "/" + file.name : "";
+        string msg = " in " + installDir + "/" + file.name;
         notifySend("Successfully installed" + msg);
       }
       else
@@ -128,15 +128,7 @@ int installCommand(target_file file)
 {
   string installCmd = "dnd2install-launcher";
 
-  if (file.extension == ".deb")
-  {
-    installCmd += " deb";
-  }
-  else if (file.extension == ".rpm")
-  {
-    installCmd += " rpm";
-  }
-  else if (file.extension == ".zip")
+  if (file.extension == ".zip")
   {
     installCmd += " zip";
   }
