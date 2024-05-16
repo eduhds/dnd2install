@@ -1,7 +1,7 @@
 #!/bin/sh
 
 app_name="$(basename $(pwd))"
-version=1.0.0
+version=1.0.1
 arch=$(uname -m)
 maintainer_name="$(git config --global user.name)"
 maintainer_email="$(git config --global user.email)"

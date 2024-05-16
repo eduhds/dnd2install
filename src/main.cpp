@@ -12,7 +12,7 @@
 #include "util.hpp"
 
 #define PROGRAM_NAME "dnd2install"
-#define PROGRAM_VERSION "1.0.0"
+#define PROGRAM_VERSION "1.0.1"
 #define INSTALL_DIR_ENV "INSTALL_DIR"
 
 using namespace std;
