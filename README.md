@@ -31,6 +31,18 @@ sudo dnf install -y ./dnd2install*.rpm
 1. Right click on tarball file
 2. Click "Open with" > "Drag and drop to install"
 
+## Development
+
+```sh
+# Building
+bash scripts/build.sh -d # debug
+bash scripts/build.sh -r # release
+
+# Packaging
+bash scripts/package.sh --deb
+bash scripts/package.sh --rpm
+```
+
 ## Credits
 
 - [webview/webview](https://github.com/webview/webview)
